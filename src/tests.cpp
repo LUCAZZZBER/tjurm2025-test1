@@ -1,24 +1,43 @@
 #include "tests.h"
 
+#include<iostream>
+
 // 练习1，实现库函数strlen
 int my_strlen(char *str) {
     /**
      * 统计字符串的长度，太简单了。
      */
 
-    // IMPLEMENT YOUR CODE HERE
-    return 0;
+     // IMPLEMENT YOUR CODE HERE
+    int length = 0;
+    while (str[length] != '\0') {
+        length++;
+    }
+    return length;
+}
+int main() {
+    char str[] = "hello";
+    cout << str;
 }
 
 
 // 练习2，实现库函数strcat
-void my_strcat(char *str_1, char *str_2) {
+    void my_strcat(char *str_1, char *str_2) {
     /**
      * 将字符串str_2拼接到str_1之后，我们保证str_1指向的内存空间足够用于添加str_2。
      * 注意结束符'\0'的处理。
      */
 
-    // IMPLEMENT YOUR CODE HERE
+     // IMPLEMENT YOUR CODE HERE
+    while (*str_1 != '\0') {
+        str_1++;
+    }
+    while (*str_2 != '\0') {
+        *str_1 = *str_2;
+        str_1++;
+        str_2++;    
+    }
+    *str_1 = '\0';
 }
 
 
@@ -30,9 +49,29 @@ char* my_strstr(char *s, char *p) {
      * s = "123456", p = "34"，应该返回指向字符'3'的指针。
      */
 
-    // IMPLEMENT YOUR CODE HERE
-    return 0;
+     // IMPLEMENT YOUR CODE HERE
+    if (*s == '\0' || *p == '\0') {
+        return nullptr;
+    }
+    char *s_temp = s;
+    char *p_temp = p;
+    while (*s != '\0') {
+        s_temp = s;
+        p_temp = p;
+        while (*s_temp == *p_temp && *s_temp != '\0' && *p_temp != '\0') {
+            s_temp++;
+            p_temp++;
+        }
+        if (*p_temp == '\0') {
+            return s;
+        }
+        s++;
+    }
+    return nullptr;
+
 }
+    
+
 
 
 /**
@@ -97,6 +136,14 @@ void rgb2gray(float *in, float *out, int h, int w) {
 
     // IMPLEMENT YOUR CODE HERE
     // ...
+    for (int i = 0; i < h; i++) {
+        for (int j = 0; j < w; j++) {
+            
+            *out = 0.1140 * in[0] + 0.5870 * in[1] + 0.2989 * in[2];
+            out++;
+            in += 3;
+        }
+    }
 }
 
 // 练习5，实现图像处理算法 resize：缩小或放大图像
