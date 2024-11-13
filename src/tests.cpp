@@ -1,6 +1,6 @@
 #include "tests.h"
-
 #include<iostream>
+using namespace std;
 
 // 练习1，实现库函数strlen
 int my_strlen(char *str) {
@@ -15,10 +15,7 @@ int my_strlen(char *str) {
     }
     return length;
 }
-int main() {
-    char str[] = "hello";
-    cout << str;
-}
+
 
 
 // 练习2，实现库函数strcat
@@ -244,6 +241,20 @@ void resize(float *in, float *out, int h, int w, int c, float scale) {
      */
 
     int new_h = h * scale, new_w = w * scale;
+    for (int y = 0;y < new_h;y++) {
+        for (int x = 0;x < new_w;x++) {
+            float x0 = x / scale, y0 = y / scale;
+            int x1 = static_cast<int>(x0), y1 = static_cast<int>(y0);
+            for (int i = 0;i < c;i++) {
+                float p1 = in[(x1 + w * y1)*c + i];
+                float p2 = in[(x1 + 1 + w * y1)*c + i];
+                float p3 = in[(x1 + w * (y1 + 1))*c + i];
+                float p4 = in[(x1 + 1 + w * (y1 + 1))*c + i];
+                float q = p4 * (x0 - x1) * (y0 - y1) + p3 * (x1 + 1 - x0) * (y0 - y1) + p2 * (x0 - x1) * (y1 + 1 - y0) + p1 * (x1 + 1 - x0) * (y1 + 1 - y0);
+                out[(x + new_w * y)*c + i] = q;
+            }
+        }   
+    }
     // IMPLEMENT YOUR CODE HERE
 
 }
@@ -267,5 +278,31 @@ void hist_eq(float *in, int h, int w) {
      * (3) 使用数组来实现灰度级 => 灰度级的映射
      */
 
-    // IMPLEMENT YOUR CODE HERE
+     // IMPLEMENT YOUR CODE HERE
+    int N = w * h;
+    int n[256]={0};
+    float pr[256]={0};
+    
+    for (int i = 0;i < N;i++) {
+        in[i] = (in[i] - static_cast<int>(in[i]) >= 0.5 ? static_cast<int>(in[i] + 1) : static_cast<int>(in[i]));
+        int x = in[i];
+        n[x]++;
+    }
+    for (int i = 0;i < 256;i++) {
+        pr[i] = n[i] / N;
+    }
+    float s[256];
+    s[0] = pr[0];
+    for (int i = 1;i < 256;i++) {
+        s[i] = pr[i] + s[i - 1];
+    }
+    float s0[256]={0};
+    for (int i = 0;i < 256;i++) {
+        s0[i] = s[i] * N;
+        s0[i] = (s0[i] - static_cast<int>(s0[i]) >= 0.5 ? static_cast<int>(s0[i] + 1) : static_cast<int>(s0[i]));
+    }
+    for (int i = 0;i < N;i++) {
+        int x = in[i];
+        in[i] = s0[x];
+    }
 }
