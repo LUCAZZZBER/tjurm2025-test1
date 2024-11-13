@@ -289,7 +289,7 @@ void hist_eq(float *in, int h, int w) {
         n[x]++;
     }
     for (int i = 0;i < 256;i++) {
-        pr[i] = n[i] / N;
+        pr[i] = static_cast<float>(n[i]) / N;
     }
     float s[256];
     s[0] = pr[0];
@@ -298,7 +298,7 @@ void hist_eq(float *in, int h, int w) {
     }
     float s0[256]={0};
     for (int i = 0;i < 256;i++) {
-        s0[i] = s[i] * N;
+        s0[i] = s[i] * 255;
         s0[i] = (s0[i] - static_cast<int>(s0[i]) >= 0.5 ? static_cast<int>(s0[i] + 1) : static_cast<int>(s0[i]));
     }
     for (int i = 0;i < N;i++) {
